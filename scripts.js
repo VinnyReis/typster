@@ -3,10 +3,12 @@ var errorSound = new Audio('./src/sounds/errorSound.mp3');
 var correctWordSound = new Audio('./src/sounds/correctWordSound.mp3');
 
 var current_word_div = document.getElementById('word');
+var next_words_div = document.getElementById('next_words');
 
 document.addEventListener('keypress', handleKeyPress);
 document.addEventListener('keydown', handleBackspace);
 
+var wordCounter = 0;
 var correctCounter = 0;
 var errorCounter = 0;
 
@@ -23,11 +25,11 @@ var wordList = [
   'human'
 ];
 
-var wordListPosition = 0;
-var current_word = wordList[wordListPosition];
+var current_word = wordList[wordCounter];
 var typed_word = '';
 
 getNextWord();
+updateNextWords();
 
 function handleKeyPress(e){
   if(current_word[typed_word.length] === e.key){
@@ -39,6 +41,7 @@ function handleKeyPress(e){
     if(current_word.length === typed_word.length){
       playSound(correctWordSound);
       getNextWord();
+      updateNextWords();
     };
   } else {
     errorCounter += 1;
@@ -64,13 +67,17 @@ function updateLetter(id, status){
 };
 
 function getNextWord(){
-  current_word = wordList[wordListPosition];
-  wordListPosition += 1;
+  current_word = wordList[wordCounter];
+  wordCounter += 1;
   typed_word = '';
 
   current_word_div.innerHTML = [...current_word].map((letter, i) => {
     return `<span id='${i}'>` + letter + '</span>'
   }).join('');
+};
+
+function updateNextWords(){
+  next_words_div.innerHTML = '<li style="color: #b1afaf"><h1>' + wordList[wordCounter] + '<h1></li>';
 };
 
 function playSound(sound){
